@@ -1,0 +1,1298 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sistema Empresarial PRO MAX de Pagos a Trabajadores v8</title>
+<style>
+:root{
+  --bg:#07111f; --panel:#0e1a2f; --panel2:#12203a; --line:#263a5c; --text:#eef4ff; --muted:#97a9c7;
+  --primary:#28c7a0; --primary2:#5eb9ff; --warn:#f6b33b; --danger:#ff6c7a; --purple:#8a63ff; --ok:#41d97d;
+  --radius:22px; --shadow:0 16px 46px rgba(0,0,0,.28);
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:radial-gradient(circle at top left,#163661 0,#081221 42%,#050b15 100%);color:var(--text)}
+button,input,select,textarea{font:inherit}
+.hidden{display:none!important}
+
+.hide-enterprise-removed{display:none!important}
+
+.screen{min-height:100vh;padding:16px}
+.login-wrap{display:grid;place-items:center;min-height:100vh;padding:20px}
+.login-card,.modal-card{width:min(460px,100%);background:rgba(12,20,38,.93);border:1px solid var(--line);border-radius:28px;padding:24px;box-shadow:var(--shadow);backdrop-filter:blur(12px)}
+.brand{text-align:center;margin-bottom:18px}
+.logo{width:86px;height:86px;border-radius:24px;margin:0 auto 14px;background:linear-gradient(135deg,var(--primary),var(--primary2));display:grid;place-items:center;color:#08222d;font-size:28px;font-weight:900;box-shadow:0 16px 36px rgba(40,199,160,.25)}
+.badge{display:inline-block;padding:6px 12px;border-radius:999px;border:1px solid rgba(94,185,255,.24);background:rgba(94,185,255,.12);font-size:12px;font-weight:700;color:#a9dbff;margin-bottom:12px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:13px;color:#cdd9ef;margin-bottom:6px}
+.field input,.field select,.field textarea,.search input,.search select{width:100%;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:#091325;color:var(--text);outline:none}
+.field textarea{min-height:84px;resize:vertical}
+.row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.row-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.row-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.row-5{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+@media (max-width:1080px){.row-5,.row-4,.stat-grid,.totals{grid-template-columns:repeat(2,1fr)!important}}
+@media (max-width:760px){.row,.row-3,.row-4,.row-5,.layout,.header-grid,.search,.kpi-grid,.split{grid-template-columns:1fr!important}}
+.btn{border:none;border-radius:14px;padding:12px 15px;font-weight:700;cursor:pointer;background:#172641;color:var(--text);border:1px solid #2b4166;transition:.18s transform,.18s opacity}
+.btn:hover{transform:translateY(-1px);opacity:.98}
+.btn.primary{background:linear-gradient(135deg,var(--primary),#57e6b8);color:#04241a;border:none}
+.btn.info{background:linear-gradient(135deg,var(--primary2),#88d0ff);color:#09263e;border:none}
+.btn.warn{background:linear-gradient(135deg,var(--warn),#ffd670);color:#422a00;border:none}
+.btn.danger{background:linear-gradient(135deg,var(--danger),#ff8b97);color:#fff;border:none}
+.btn.purple{background:linear-gradient(135deg,var(--purple),#aa90ff);color:#17073c;border:none}
+.btn.full{width:100%}
+.topbar{position:sticky;top:0;z-index:40;padding:12px 0 14px;background:linear-gradient(180deg,rgba(5,11,21,.97),rgba(5,11,21,.8),transparent)}
+.topbar-card,.panel,.section,.stat,.sheet,.kpi{background:rgba(11,19,37,.9);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow)}
+.topbar-card,.panel,.section,.sheet{padding:16px}
+.header-grid{display:grid;grid-template-columns:1.25fr .95fr;gap:14px;align-items:center}
+.title h2{margin:0 0 6px;font-size:28px}
+.title p{margin:0;color:var(--muted)}
+.toolbar,.tabbar{display:flex;flex-wrap:wrap;gap:10px}
+.layout{display:grid;grid-template-columns:320px 1fr;gap:16px;margin-top:10px}
+.stat-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:14px}
+.stat{padding:16px}
+.stat .k{font-size:13px;color:var(--muted)}
+.stat .v{font-size:28px;font-weight:800;margin-top:10px}
+.menu button{width:100%;text-align:left;margin-bottom:10px}
+.userbox{padding:14px;border:1px solid var(--line);border-radius:18px;background:#0a1428;margin-bottom:12px}
+.userbox b{display:block;font-size:16px}
+.userbox span{font-size:13px;color:var(--muted)}
+.section-title{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.section-title h3{margin:0;font-size:22px}
+.mobile-tabs{display:none}
+@media (max-width:760px){.mobile-tabs{display:flex;overflow:auto;padding-bottom:6px}.desktop-menu{display:none}}
+.tab{padding:11px 14px;border-radius:14px;border:1px solid var(--line);background:#121d34;color:#dfe9ff;cursor:pointer;font-weight:700}
+.tab.active{background:linear-gradient(135deg,var(--primary2),#87daff);color:#08243b;border:none}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:10px 8px;border-bottom:1px solid #1f2f4a;text-align:left;vertical-align:top}
+th{color:#bfd2f1;background:#0d172d;position:sticky;top:0;z-index:2}
+.table-wrap{max-height:420px;overflow:auto;border:1px solid #1d2c47;border-radius:18px;background:#0a1325}
+.pill{display:inline-block;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:700}
+.pill.green{background:rgba(65,217,125,.14);color:#98f0b7}
+.pill.blue{background:rgba(94,185,255,.14);color:#a8dbff}
+.pill.orange{background:rgba(246,179,59,.14);color:#ffd87b}
+.pill.red{background:rgba(255,108,122,.15);color:#ffb8c0}
+.pill.purple{background:rgba(138,99,255,.14);color:#d3c3ff}
+.small,.help,.foot{font-size:12px;color:var(--muted)}
+.right{text-align:right}.center{text-align:center}
+.empty{padding:24px;text-align:center;color:var(--muted)}
+.modal{position:fixed;inset:0;background:rgba(2,6,12,.74);display:none;place-items:center;padding:18px;z-index:100}
+.modal.open{display:grid}
+.modal-card{width:min(1120px,100%);max-height:92vh;overflow:auto}
+.kpi-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:14px}
+.kpi{padding:16px}
+.chart-box{height:220px;border:1px solid #1d2c47;border-radius:20px;padding:10px;background:#091325}
+.totals{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:12px}
+.total-box{background:#091325;border:1px solid var(--line);padding:14px;border-radius:18px}
+.total-box span{color:var(--muted);font-size:12px}
+.total-box b{display:block;font-size:22px;margin-top:7px}
+.search{display:grid;grid-template-columns:1fr 180px 180px 170px;gap:10px}
+.split{display:grid;grid-template-columns:1.1fr .9fr;gap:12px}
+.hidden-inline{display:none}.sig-box{border:1px dashed #999;border-radius:10px;padding:8px;margin-top:10px}.mono{font-family:monospace}
+@media print{body{background:#fff;color:#111}.no-print{display:none!important}}
+</style>
+</head>
+<body>
+<div id="loginScreen" class="login-wrap">
+  <div class="login-card">
+    <div class="brand">
+      <div class="badge">Versión empresa grande</div>
+      <div class="logo" id="loginLogo">HP</div>
+      <h1>Pagos a Trabajadores Enterprise MAX</h1>
+      <p>Login · planilla · adelantos · historial · boletas y reportes PDF</p>
+    </div>
+    <div class="field"><label>Usuario</label><input id="loginUser" placeholder="Ej. admin"></div>
+    <div class="field"><label>Contraseña</label><input id="loginPass" type="password" placeholder="••••••"></div>
+    <button class="btn primary full" onclick="login()">Ingresar</button>
+    <div class="foot">Accesos demo: <b>admin / 1234</b>, <b>rrhh / 1234</b>, <b>consulta / 1234</b></div>
+  </div>
+</div>
+
+<div id="appScreen" class="screen hidden">
+  <div class="topbar no-print">
+    <div class="topbar-card">
+      <div class="header-grid">
+        <div class="title">
+          <div class="badge" id="companyBadge">Sistema empresa grande listo para abrir</div>
+          <h2>Pagos a Trabajadores Enterprise MAX</h2>
+          <p>Quincenal y mensual · préstamos en cuotas · auditoría · boletas y reportes</p>
+        </div>
+        <div>
+          <div class="toolbar" style="justify-content:flex-end">
+            <button class="btn info" onclick="exportData()">Exportar respaldo</button>
+            <label class="btn" for="importFile">Importar respaldo</label>
+            <input id="importFile" type="file" accept="application/json" class="hidden">
+            <button class="btn warn" onclick="openConfig()">Configuración</button>
+            <button class="btn" onclick="logout()">Salir</button>
+          </div>
+        </div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat"><div class="k">Trabajadores activos</div><div class="v" id="stWorkers">0</div></div>
+        <div class="stat"><div class="k">Planilla neta</div><div class="v" id="stPayroll">S/. 0.00</div></div>
+        <div class="stat"><div class="k">Pagos registrados</div><div class="v" id="stPaid">0</div></div>
+        <div class="stat"><div class="k">Adelantos pendientes</div><div class="v" id="stAdvances">S/. 0.00</div></div>
+        <div class="stat"><div class="k">Periodo activo</div><div class="v" style="font-size:18px" id="stPeriod">—</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="layout">
+    <aside class="panel desktop-menu no-print">
+      <div class="userbox">
+        <b id="currentUserName">Usuario</b>
+        <span id="currentUserRole">Rol</span>
+      </div>
+      <button class="tab active" data-tab="dashboard" onclick="showTab('dashboard')">Resumen</button>
+      <button class="tab" data-tab="workers" onclick="showTab('workers')">Trabajadores</button>
+      <button class="tab" data-tab="advances" onclick="showTab('advances')">Adelantos</button>
+      <button class="tab" data-tab="payroll" onclick="showTab('payroll')">Planilla</button>
+      <button class="tab" data-tab="history" onclick="showTab('history')">Historial</button>
+      <button class="tab admin-only" data-tab="users" onclick="showTab('users')">Usuarios del sistema</button>
+      <button class="tab admin-only" data-tab="audit" onclick="showTab('audit')">Auditoría</button>
+      <div class="foot">Todo queda guardado en este navegador.</div>
+    </aside>
+
+    <main>
+      <div class="mobile-tabs no-print">
+        <button class="tab active" data-tab="dashboard" onclick="showTab('dashboard')">Resumen</button>
+        <button class="tab" data-tab="workers" onclick="showTab('workers')">Trabajadores</button>
+        <button class="tab" data-tab="advances" onclick="showTab('advances')">Adelantos</button>
+        <button class="tab" data-tab="payroll" onclick="showTab('payroll')">Planilla</button>
+        <button class="tab" data-tab="history" onclick="showTab('history')">Historial</button>
+        <button class="tab admin-only" data-tab="users" onclick="showTab('users')">Usuarios</button>
+        <button class="tab admin-only" data-tab="audit" onclick="showTab('audit')">Auditoría</button>
+      </div>
+
+      <section id="tab-dashboard" class="section tab-section">
+        <div class="section-title"><h3>Resumen gerencial</h3><span class="small">Vista rápida del sistema</span></div>
+        <div class="kpi-grid">
+          <div class="kpi">
+            <h4 style="margin:0 0 12px">Planilla mensual neta</h4>
+            <div id="monthlyChart" class="chart-box"></div>
+          </div>
+          <div class="kpi">
+            <h4 style="margin:0 0 12px">Indicadores</h4>
+            <div id="dashboardInfo"></div>
+          </div>
+        </div>
+        <div class="split" style="margin-top:14px">
+          <div class="sheet">
+            <div class="section-title"><h3 style="font-size:18px">Empresa</h3></div>
+            <div id="companyInfo"></div>
+          </div>
+          <div class="sheet">
+            <div class="section-title"><h3 style="font-size:18px">Últimos movimientos</h3></div>
+            <div id="lastMovements"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-workers" class="section tab-section hidden">
+        <div class="section-title"><h3>Registro de trabajadores</h3><span class="small">Ficha completa de personal</span></div>
+        <div class="row">
+          <div class="sheet">
+            <form id="workerForm">
+              <input type="hidden" id="workerId">
+              <div class="field"><label>Nombre completo</label><input id="nombre" required></div>
+              <div class="row">
+                <div class="field"><label>DNI</label><input id="dni"></div>
+                <div class="field"><label>Cargo</label><input id="cargo"></div>
+              </div>
+              <div class="row">
+                <div class="field"><label>Área</label><input id="area"></div>
+                <div class="field"><label>Fecha de ingreso</label><input id="fechaIngreso" type="date"></div>
+              </div>
+              <div class="row">
+                <div class="field"><label>Régimen</label><select id="regimen"><option value="general">General</option><option value="mype">MYPE</option><option value="parcial">Tiempo parcial</option></select></div>
+                <div class="field"><label>Centro de costo</label><input id="centroCosto" placeholder="Ej. Operaciones"></div>
+              </div>
+              <div class="row">
+                <div class="field"><label>Estado</label><select id="estadoTrabajador"><option value="activo">Activo</option><option value="inactivo">Inactivo</option></select></div>
+                <div class="field"><label>Tipo de pago</label><select id="tipoPago"><option value="quincenal">Quincenal</option><option value="mensual">Mensual</option></select></div>
+              </div>
+              <div class="row">
+                <div class="field"><label>Sueldo base (S/.)</label><input id="sueldoBase" type="number" step="0.01" min="0" value="0"></div>
+                <div class="field"><label>Supervisor / jefe</label><input id="supervisor" placeholder="Ej. Jefe de área"></div>
+              </div>
+              <div class="row">
+                <div class="field"><label>Precio hora extra (S/.)</label><input id="precioHoraExtra" type="number" step="0.01" min="0" value="0"></div>
+                <div class="field"><label>Seguro</label><select id="seguro"><option>EsSalud</option><option>SIS</option><option>EPS</option><option>Ninguno</option></select></div>
+              </div>
+              <div class="row">
+                <div class="field"><label>Pensión</label><select id="pension"><option>AFP</option><option>ONP</option><option>Ninguno</option></select></div>
+                <div class="field"><label>Banco</label><input id="banco" placeholder="Ej. BCP"></div>
+              </div>
+              <div class="row">
+                <div class="field"><label>WhatsApp trabajador</label><input id="telefono" placeholder="Ej. 51912345678"></div>
+                <div class="field"><label>Cuenta / CCI</label><input id="cuenta"></div>
+              </div>
+              <div class="row">
+                <div class="field"><label>Moneda cuenta</label><select id="monedaCuenta"><option value="PEN">PEN</option><option value="USD">USD</option></select></div>
+                <div class="field"><label>Observaciones internas</label><input id="observacionCorta" placeholder="Dato rápido del legajo"></div>
+              </div>
+              <div class="row-3">
+                <div class="field"><label>Comisión AFP %</label><input id="afpComision" type="number" step="0.01" value="1.35"></div>
+                <div class="field"><label>Prima AFP %</label><input id="afpPrima" type="number" step="0.01" value="1.74"></div>
+                <div class="field"><label>ONP %</label><input id="onpPorcentaje" type="number" step="0.01" value="13"></div>
+              </div>
+              <div class="field"><label>Observaciones</label><textarea id="observacion"></textarea></div>
+              <div class="toolbar"><button class="btn primary" type="submit">Guardar trabajador</button><button class="btn" type="button" onclick="clearWorkerForm()">Limpiar</button></div>
+            </form>
+          </div>
+          <div class="sheet">
+            <div class="section-title"><h3 style="font-size:18px">Lista de trabajadores</h3></div>
+            <div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Área/Cargo</th><th>Pago</th><th>Estado</th><th>Sueldo</th><th>Beneficios</th><th>Acciones</th></tr></thead><tbody id="workersTable"></tbody></table></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-advances" class="section tab-section hidden">
+        <div class="section-title"><h3>Adelantos y préstamos</h3><span class="small">Se descuentan automáticamente en planilla según el periodo</span></div>
+        <div class="row">
+          <div class="sheet">
+            <form id="advanceForm">
+              <input type="hidden" id="advanceId">
+              <div class="field"><label>Trabajador</label><select id="advanceWorker"></select></div>
+              <div class="row">
+                <div class="field"><label>Fecha</label><input id="advanceDate" type="date"></div>
+                <div class="field"><label>Monto (S/.)</label><input id="advanceAmount" type="number" min="0" step="0.01" value="0"></div>
+              </div>
+              <div class="row">
+                <div class="field"><label>Tipo</label><select id="advanceType" onchange="toggleAdvanceLoanFields()"><option value="adelanto">Adelanto</option><option value="prestamo">Préstamo</option></select></div>
+                <div class="field"><label>Estado</label><select id="advanceStatus"><option value="pendiente">Pendiente</option><option value="descontado">Descontado</option></select></div>
+              </div>
+              <div id="loanFields" class="row-4 hidden-inline">
+                <div class="field"><label>Cuotas</label><input id="advanceCuotas" type="number" min="1" step="1" value="1"></div>
+                <div class="field"><label>Cuota fija (S/.)</label><input id="advanceCuotaFija" type="number" min="0" step="0.01" value="0"></div>
+                <div class="field"><label>Primera cuota</label><input id="advanceFirstDue" type="date"></div>
+                <div class="field"><label>Frecuencia</label><select id="advanceFrequency"><option value="mensual">Mensual</option><option value="quincenal">Quincenal</option></select></div>
+              </div>
+              <div class="field"><label>Observación</label><textarea id="advanceNote"></textarea></div>
+              <div class="toolbar"><button class="btn primary" type="submit">Guardar adelanto</button><button class="btn" type="button" onclick="clearAdvanceForm()">Limpiar</button></div>
+            </form>
+          </div>
+          <div class="sheet">
+            <div class="search no-print" style="grid-template-columns:1fr 180px 180px 170px">
+              <input id="advSearch" placeholder="Buscar trabajador o nota" oninput="renderAdvances()">
+              <input id="advMonth" type="month" onchange="renderAdvances()">
+              <select id="advFilterStatus" onchange="renderAdvances()"><option value="">Todos los estados</option><option value="pendiente">Pendiente</option><option value="descontado">Descontado</option></select>
+              <select id="advFilterType" onchange="renderAdvances()"><option value="">Todos los tipos</option><option value="adelanto">Adelanto</option><option value="prestamo">Préstamo</option></select>
+            </div>
+            <div class="table-wrap" style="margin-top:12px"><table><thead><tr><th>Fecha</th><th>Trabajador</th><th>Tipo</th><th>Monto</th><th>Saldo / cuotas</th><th>Estado</th><th>Nota</th><th>Acciones</th></tr></thead><tbody id="advancesTable"></tbody></table></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-payroll" class="section tab-section hidden">
+        <div class="section-title"><h3>Generar planilla</h3><span class="small">La planilla jala adelantos pendientes del periodo seleccionado</span></div>
+        <div class="sheet">
+          <div class="row-5">
+            <div class="field"><label>Periodo</label><input id="periodoNombre" placeholder="Ej. Abril 2026 - Quincena 1"></div>
+            <div class="field"><label>Fecha inicio</label><input id="fechaInicio" type="date"></div>
+            <div class="field"><label>Fecha fin</label><input id="fechaFin" type="date"></div>
+            <div class="field"><label>Tipo</label><select id="tipoPlanilla"><option value="todos">Todos</option><option value="quincenal">Solo quincenal</option><option value="mensual">Solo mensual</option></select></div>
+            <div class="field"><label>Estado de pago</label><select id="estadoPago"><option value="pagado">Pagado</option><option value="pendiente">Pendiente</option></select></div>
+          </div>
+          <div class="field" style="margin-top:10px"><label>Observación del pago / lote</label><input id="payrollNote" placeholder="Ej. Planilla aprobada por gerencia"></div>
+          <div class="toolbar">
+            <button class="btn info" onclick="renderPlanilla()">Calcular planilla</button>
+            <button class="btn" onclick="aplicarCTSTodas()">Auto CTS</button>
+            <button class="btn" onclick="aplicarGratiTodas()">Auto gratificación</button>
+            <button class="btn" onclick="aplicarVacacionesTodas()">Auto vacaciones</button>
+            <button class="btn" onclick="openSignatureModal()">Firma trabajador</button>
+            <button class="btn primary" onclick="guardarPagos()">Guardar pagos</button>
+            <button class="btn purple" onclick="generarReporteGeneral()">Reporte general PDF</button>
+          </div>
+        </div>
+        <div class="table-wrap" style="margin-top:12px">
+          <table>
+            <thead>
+              <tr>
+                <th>Trabajador</th><th>Base</th><th class='hide-enterprise-removed'>Asign. fam.</th><th class='hide-enterprise-removed'>Bono</th><th class='hide-enterprise-removed'>Movilidad</th><th>H. extras</th><th>Precio H.E.</th><th>CTS</th><th>Gratificación</th><th>Vac. días</th><th>Vacaciones</th><th>Adelantos / préstamos</th><th>Faltas</th><th>Otros dsctos.</th><th>Pensión</th><th>Neto</th>
+              </tr>
+            </thead>
+            <tbody id="planillaBody"></tbody>
+          </table>
+        </div>
+        <div class="totals">
+          <div class="total-box"><span>Base</span><b id="totalBruto">S/. 0.00</b></div>
+          <div class="total-box hide-enterprise-removed"><span>Asign. familiar</span><b id="totalAsignacion">S/. 0.00</b></div>
+          <div class="total-box hide-enterprise-removed"><span>Bonos y movilidad</span><b id="totalBonos">S/. 0.00</b></div>
+          <div class="total-box"><span>Horas extra</span><b id="totalHorasExtra">S/. 0.00</b></div>
+          <div class="total-box"><span>Beneficios</span><b id="totalBeneficios">S/. 0.00</b></div>
+          <div class="total-box"><span>Descuentos + pensión</span><b id="totalDescuentos">S/. 0.00</b></div>
+          <div class="total-box"><span>Neto total</span><b id="totalNeto">S/. 0.00</b></div>
+        </div>
+      </section>
+
+      <section id="tab-history" class="section tab-section hidden">
+        <div class="section-title"><h3>Historial de pagos</h3><span class="small">Boletas, estados y consulta</span></div>
+        <div class="search no-print" style="grid-template-columns:1fr 180px 180px 170px 180px">
+          <input id="searchText" placeholder="Buscar por trabajador, DNI o periodo" oninput="renderHistory()">
+          <select id="filterTipo" onchange="renderHistory()"><option value="">Todos los tipos</option><option value="quincenal">Quincenal</option><option value="mensual">Mensual</option></select>
+          <input id="filterFecha" type="month" onchange="renderHistory()">
+          <select id="filterStatus" onchange="renderHistory()"><option value="">Todos los estados</option><option value="pagado">Pagado</option><option value="pendiente">Pendiente</option></select>
+          <input id="filterAreaHistory" placeholder="Filtrar por área" oninput="renderHistory()">
+        </div>
+        <div class="table-wrap" style="margin-top:12px"><table><thead><tr><th>Fecha</th><th>Boleta</th><th>Periodo</th><th>Trabajador</th><th>Tipo</th><th>Estado</th><th>Neto</th><th>Acciones</th></tr></thead><tbody id="historyTable"></tbody></table></div>
+      </section>
+
+      <section id="tab-users" class="section tab-section hidden admin-only">
+        <div class="section-title"><h3>Usuarios del sistema</h3><span class="small">Solo administrador</span></div>
+        <div class="row">
+          <div class="sheet">
+            <form id="sysUserForm">
+              <input type="hidden" id="sysUserId">
+              <div class="field"><label>Nombre</label><input id="sysNombre" required></div>
+              <div class="row">
+                <div class="field"><label>Usuario</label><input id="sysUsuario" required></div>
+                <div class="field"><label>Contraseña</label><input id="sysClave" required></div>
+              </div>
+              <div class="field"><label>Rol</label><select id="sysRol"><option value="admin">Administrador</option><option value="rrhh">RRHH</option><option value="consulta">Consulta</option></select></div>
+              <div class="toolbar"><button class="btn primary" type="submit">Guardar usuario</button><button class="btn" type="button" onclick="clearSystemUserForm()">Limpiar</button></div>
+            </form>
+          </div>
+          <div class="sheet">
+            <div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Usuario</th><th>Rol</th><th>Acciones</th></tr></thead><tbody id="sysUsersTable"></tbody></table></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-audit" class="section tab-section hidden admin-only">
+        <div class="section-title"><h3>Auditoría del sistema</h3><span class="small">Registro interno de acciones clave</span></div>
+        <div class="search no-print" style="grid-template-columns:1fr 190px">
+          <input id="auditSearch" placeholder="Buscar acción, usuario o detalle" oninput="renderAudit()">
+          <input id="auditMonth" type="month" onchange="renderAudit()">
+        </div>
+        <div class="table-wrap" style="margin-top:12px"><table><thead><tr><th>Fecha</th><th>Usuario</th><th>Acción</th><th>Detalle</th></tr></thead><tbody id="auditTable"></tbody></table></div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<div id="signatureModal" class="modal no-print"><div class="modal-card" style="max-width:760px">
+  <div class="section-title"><h3>Firma del trabajador</h3><button class="btn" onclick="closeSignatureModal()">Cerrar</button></div>
+  <div class="small">Firma opcional para que salga en la boleta individual.</div>
+  <div style="margin-top:12px;background:#fff;border-radius:18px;padding:12px">
+    <canvas id="signaturePad" width="680" height="220" style="width:100%;border:1px solid #ccc;border-radius:12px;touch-action:none"></canvas>
+  </div>
+  <div class="toolbar" style="margin-top:12px">
+    <button class="btn" onclick="clearSignaturePad()">Limpiar firma</button>
+    <button class="btn primary" onclick="saveSignaturePad()">Guardar firma</button>
+  </div>
+</div></div>
+
+<div id="configModal" class="modal no-print"><div class="modal-card">
+  <div class="section-title"><h3>Configuración general</h3><button class="btn" onclick="closeConfig()">Cerrar</button></div>
+  <form id="configForm">
+    <div class="row-4">
+      <div class="field"><label>Empresa</label><input id="cfgEmpresa"></div>
+      <div class="field"><label>RUC / detalle</label><input id="cfgRuc"></div>
+      <div class="field"><label>Moneda</label><input id="cfgMoneda"></div>
+      <div class="field"><label>Iniciales logo</label><input id="cfgLogo"></div>
+    </div>
+    <div class="row-4">
+      <div class="field"><label>EsSalud %</label><input id="cfgEsSalud" type="number" step="0.01"></div>
+      <div class="field"><label>EPS %</label><input id="cfgEPS" type="number" step="0.01"></div>
+      <div class="field"><label>Horas por día</label><input id="cfgHorasDia" type="number" step="0.01"></div>
+      <div class="field"><label>Días del mes</label><input id="cfgDiasMes" type="number" step="1"></div>
+    </div>
+    <div class="row">
+      <div class="field"><label>Factor H. extra</label><input id="cfgFactorHE" type="number" step="0.01"></div>
+      <div class="field"><label>Serie de boletas</label><input id="cfgSerieBoleta"></div>
+    </div>
+    <div class="field"><label>Dirección / pie</label><textarea id="cfgDireccion"></textarea></div>
+    <button class="btn primary" type="submit">Guardar configuración</button>
+  </form>
+</div></div>
+
+<script>
+const STORAGE_KEY='sistema_pagos_trabajadores_empresa_grande_v8';
+const DEFAULT_STATE={
+  currentUser:null,
+  workers:[],
+  advances:[],
+  history:[],
+  audit:[],
+  users:[
+    {id:'u1',name:'Administrador',username:'admin',password:'1234',role:'admin'},
+    {id:'u2',name:'Recursos Humanos',username:'rrhh',password:'1234',role:'rrhh'},
+    {id:'u3',name:'Consulta',username:'consulta',password:'1234',role:'consulta'}
+  ],
+  config:{
+    empresa:'Hersam Aceros',
+    ruc:'RUC / Datos',
+    moneda:'S/.',
+    logo:'HP',
+    direccion:'Dirección / pie del reporte',
+    esSaludPct:9,
+    epsPct:6.75,
+    horasDia:8,
+    diasMes:30,
+    factorHorasExtra:1.25,
+    serieBoleta:'BOL'
+  }
+};
+const state=JSON.parse(JSON.stringify(DEFAULT_STATE));
+
+function byId(id){return document.getElementById(id)}
+function num(v){return parseFloat(v)||0}
+function money(n){return `${state.config.moneda} ${(num(n)).toFixed(2)}`}
+function uid(){return Math.random().toString(36).slice(2,10)+Date.now().toString(36)}
+function safe(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function today(){return new Date().toISOString().slice(0,10)}
+function monthValue(v){return String(v||'').slice(0,7)}
+function inRange(d,a,b){if(!d||!a||!b) return false; return d>=a && d<=b}
+function boletaCode(index){return `${state.config.serieBoleta}-${String(index).padStart(6,'0')}`}
+function normalizePhone(v){return String(v||'').replace(/\D/g,'')}
+function periodKey(start,end){return `${start||''}_${end||''}`}
+function periodMonth(v){return String(v||'').slice(0,7)}
+function monthsDiff(a,b){
+  if(!a||!b) return 0;
+  const da=new Date(a+'T00:00:00'); const db=new Date(b+'T00:00:00');
+  return (db.getFullYear()-da.getFullYear())*12+(db.getMonth()-da.getMonth());
+}
+function getPaymentFrequency(worker){return worker?.tipoPago==='quincenal' ? 'quincenal' : 'mensual'}
+function loanDueInPeriod(item,worker,start,end){
+  const first=item.primeraCuotaFecha||item.fecha;
+  if(!first || first>end) return false;
+  const freq=item.frecuenciaCobro||getPaymentFrequency(worker);
+  if(freq==='quincenal') return first<=end;
+  return monthsDiff(first,end)>=0 && periodMonth(first)<=periodMonth(end);
+}
+function loanAlreadyApplied(item,start,end){
+  return Array.isArray(item.periodosAplicados) && item.periodosAplicados.includes(periodKey(start,end));
+}
+function markLoanApplied(item,start,end){
+  if(!Array.isArray(item.periodosAplicados)) item.periodosAplicados=[];
+  const key=periodKey(start,end);
+  if(!item.periodosAplicados.includes(key)) item.periodosAplicados.push(key);
+}
+function buildBoletaWhatsAppMessage(r){
+  return [
+    `*${state.config.empresa}*`,
+    `Boleta: ${r.boleta||''}`,
+    `Trabajador: ${r.nombre||''}`,
+    `Periodo: ${r.periodo||''}`,
+    `Fecha pago: ${r.fecha||''}`,
+    `Base: ${money(r.base)}`,
+    `Horas extra: ${money(r.horasExtraMonto||0)}`,
+    `CTS: ${money(r.cts||0)}`,
+    `Gratificación: ${money(r.gratificacion||0)}`,
+    `Vacaciones: ${money(r.vacaciones||0)}`,
+    `Descuentos: ${money((r.adelantos||0)+(r.faltasMonto||0)+(r.otrosDescuentos||0)+(r.pension||0))}`,
+    `*Neto a pagar: ${money(r.neto)}*`,
+    '',
+    'Boleta generada desde el sistema. Para adjuntar el PDF, primero usa el botón “Boleta PDF” y guárdalo desde tu navegador.'
+  ].join('\n');
+}
+function enviarBoletaWhatsApp(id){
+  const r=state.history.find(x=>x.id===id); if(!r) return;
+  const phone=normalizePhone(r.telefono||state.workers.find(w=>w.id===r.workerId)?.telefono||'');
+  if(!phone){alert('Este trabajador no tiene WhatsApp registrado.'); return;}
+  const url=`https://wa.me/${phone}?text=${encodeURIComponent(buildBoletaWhatsAppMessage(r))}`;
+  window.open(url,'_blank');
+}
+function roleLabel(role){return role==='admin'?'Administrador':role==='rrhh'?'RRHH':'Consulta'}
+function isAdmin(){return state.currentUser?.role==='admin'}
+function canEdit(){return ['admin','rrhh'].includes(state.currentUser?.role)}
+
+function saveState(){
+  localStorage.setItem(STORAGE_KEY,JSON.stringify({
+    workers:state.workers, advances:state.advances, history:state.history, users:state.users, config:state.config, currentUser:state.currentUser
+  }))
+}
+function loadState(){
+  const raw=localStorage.getItem(STORAGE_KEY); if(!raw) return;
+  try{
+    const data=JSON.parse(raw);
+    state.workers=Array.isArray(data.workers)?data.workers:[];
+    state.advances=Array.isArray(data.advances)?data.advances:[];
+    state.history=Array.isArray(data.history)?data.history:[];
+    state.users=Array.isArray(data.users)&&data.users.length?data.users:JSON.parse(JSON.stringify(DEFAULT_STATE.users));
+    state.config={...state.config,...(data.config||{})};
+    state.currentUser=data.currentUser||null;
+  }catch(e){console.error(e)}
+}
+
+function login(){
+  const user=byId('loginUser').value.trim();
+  const pass=byId('loginPass').value;
+  const found=state.users.find(u=>u.username===user&&u.password===pass);
+  if(!found){alert('Usuario o contraseña incorrectos.'); return}
+  state.currentUser={id:found.id,name:found.name,username:found.username,role:found.role};
+  saveState();
+  applySession();
+}
+function logout(){state.currentUser=null; saveState(); applySession();}
+function applySession(){
+  const logged=!!state.currentUser;
+  byId('loginScreen').classList.toggle('hidden',logged);
+  byId('appScreen').classList.toggle('hidden',!logged);
+  if(!logged) return;
+  byId('currentUserName').textContent=state.currentUser.name;
+  byId('currentUserRole').textContent=`Rol: ${roleLabel(state.currentUser.role)}`;
+  document.querySelectorAll('.admin-only').forEach(el=>el.classList.toggle('hidden',!isAdmin()));
+  const disableEdit=!canEdit();
+  document.querySelectorAll('#workerForm input,#workerForm select,#workerForm textarea,#workerForm button,#advanceForm input,#advanceForm select,#advanceForm textarea,#advanceForm button,#tab-payroll button,#tab-payroll input,#tab-payroll select').forEach(el=>{el.disabled=disableEdit;});
+  byId('importFile').disabled=!canEdit();
+  renderAll();
+}
+function showTab(tab){
+  document.querySelectorAll('.tab-section').forEach(s=>s.classList.add('hidden'));
+  byId('tab-'+tab).classList.remove('hidden');
+  document.querySelectorAll('[data-tab]').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll(`[data-tab="${tab}"]`).forEach(b=>b.classList.add('active'));
+}
+
+function clearWorkerForm(){
+  byId('workerId').value='';
+  byId('workerForm').reset();
+  byId('sueldoBase').value='0';
+  byId('precioHoraExtra').value='0';
+  if(byId('centroCosto')) byId('centroCosto').value='';
+  if(byId('supervisor')) byId('supervisor').value='';
+  if(byId('telefono')) byId('telefono').value='';
+  if(byId('observacionCorta')) byId('observacionCorta').value='';
+  byId('regimen').value='general';
+    byId('afpComision').value='1.35';
+  byId('afpPrima').value='1.74';
+  byId('onpPorcentaje').value='13';
+}
+byId('workerForm').addEventListener('submit',e=>{
+  e.preventDefault(); if(!canEdit()) return;
+  const id=byId('workerId').value||uid();
+  const worker={
+    id,
+    nombre:byId('nombre').value.trim(),
+    dni:byId('dni').value.trim(),
+    cargo:byId('cargo').value.trim(),
+    area:byId('area').value.trim(),
+    fechaIngreso:byId('fechaIngreso').value||'',
+    regimen:byId('regimen').value,
+    tieneHijos:'no',
+    centroCosto:byId('centroCosto').value.trim(),
+    supervisor:byId('supervisor').value.trim(),
+    estado:byId('estadoTrabajador').value,
+    tipoPago:byId('tipoPago').value,
+    sueldoBase:num(byId('sueldoBase').value),
+    asignacionFamiliar:0,
+    precioHoraExtra:num(byId('precioHoraExtra').value),
+    seguro:byId('seguro').value,
+    pension:byId('pension').value,
+    banco:byId('banco').value.trim(),
+    telefono:byId('telefono').value.trim(),
+    cuenta:byId('cuenta').value.trim(),
+    monedaCuenta:byId('monedaCuenta').value,
+    afpComision:num(byId('afpComision').value),
+    afpPrima:num(byId('afpPrima').value),
+    onpPorcentaje:num(byId('onpPorcentaje').value),
+    observacionCorta:(byId('observacionCorta')?.value||'').trim(),
+    observacion:byId('observacion').value.trim()
+  };
+  const ix=state.workers.findIndex(w=>w.id===id);
+  if(ix>=0) state.workers[ix]=worker; else state.workers.push(worker);
+  logAudit('Trabajador guardado', worker.nombre); saveState(); clearWorkerForm(); renderAll(); alert('Trabajador guardado correctamente.');
+});
+function editWorker(id){
+  if(!canEdit()) return;
+  const w=state.workers.find(x=>x.id===id); if(!w) return;
+  byId('workerId').value=w.id;
+  byId('nombre').value=w.nombre||'';
+  byId('dni').value=w.dni||'';
+  byId('cargo').value=w.cargo||'';
+  byId('area').value=w.area||'';
+  byId('fechaIngreso').value=w.fechaIngreso||'';
+  byId('regimen').value=w.regimen||'general';
+  if(byId('centroCosto')) byId('centroCosto').value=w.centroCosto||'';
+  if(byId('supervisor')) byId('supervisor').value=w.supervisor||'';
+  byId('estadoTrabajador').value=w.estado||'activo';
+  byId('tipoPago').value=w.tipoPago||'quincenal';
+  byId('sueldoBase').value=w.sueldoBase??0;
+    byId('precioHoraExtra').value=w.precioHoraExtra??0;
+  byId('seguro').value=w.seguro||'EsSalud';
+  byId('pension').value=w.pension||'AFP';
+  byId('banco').value=w.banco||'';
+  if(byId('telefono')) byId('telefono').value=w.telefono||'';
+  byId('cuenta').value=w.cuenta||'';
+  byId('monedaCuenta').value=w.monedaCuenta||'PEN';
+  byId('afpComision').value=w.afpComision??1.35;
+  byId('afpPrima').value=w.afpPrima??1.74;
+  byId('onpPorcentaje').value=w.onpPorcentaje??13;
+  if(byId('observacionCorta')) byId('observacionCorta').value=w.observacionCorta||'';
+  byId('observacion').value=w.observacion||'';
+  showTab('workers');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function deleteWorker(id){
+  if(!canEdit()) return;
+  if(!confirm('¿Eliminar trabajador?')) return;
+  state.workers=state.workers.filter(w=>w.id!==id);
+  state.advances=state.advances.filter(a=>a.workerId!==id);
+  logAudit('Trabajador eliminado', id); logAudit('Movimiento eliminado', id); saveState(); renderAll();
+}
+function activeWorkers(){return state.workers.filter(w=>(w.estado||'activo')==='activo')}
+function renderWorkers(){
+  const tbody=byId('workersTable');
+  const txt=(byId('workerSearch')?.value||'').trim().toLowerCase();
+  const areaFilter=(byId('workerAreaFilter')?.value||'').trim().toLowerCase();
+  const stateFilter=(byId('workerStateFilter')?.value||'').trim();
+  let rows=state.workers.slice();
+  if(txt) rows=rows.filter(w=>`${w.nombre} ${w.dni} ${w.cargo}`.toLowerCase().includes(txt));
+  if(areaFilter) rows=rows.filter(w=>`${w.area||''} ${w.centroCosto||''}`.toLowerCase().includes(areaFilter));
+  if(stateFilter) rows=rows.filter(w=>(w.estado||'activo')===stateFilter);
+  if(!rows.length){tbody.innerHTML='<tr><td colspan="7" class="empty">No hay trabajadores registrados.</td></tr>'; fillWorkerSelects(); return;}
+  tbody.innerHTML=rows.map(w=>`
+    <tr>
+      <td><b>${safe(w.nombre)}</b><div class="small">${safe(w.dni)} · ${safe(w.area||'Sin área')}</div></td>
+      <td>${safe(w.area||'')}<div class="small">${safe(w.cargo||'')} · ${safe(w.centroCosto||'Sin centro de costo')}</div></td>
+      <td><span class="pill ${w.tipoPago==='quincenal'?'blue':'green'}">${safe(w.tipoPago)}</span></td>
+      <td><span class="pill ${w.estado==='activo'?'green':'red'}">${safe(w.estado||'activo')}</span></td>
+      <td>${money(w.sueldoBase)}</td>
+      <td>${safe((w.regimen||'general').toUpperCase())} · ${safe(w.centroCosto||'Sin centro de costo')}</td>
+      <td>${canEdit()?`<div class="toolbar"><button class="btn" onclick="editWorker('${w.id}')">Editar</button><button class="btn danger" onclick="deleteWorker('${w.id}')">Eliminar</button></div>`:'<span class="small">Solo lectura</span>'}</td>
+    </tr>
+  `).join('');
+  fillWorkerSelects();
+}
+
+function toggleAdvanceLoanFields(){
+  const isLoan=byId('advanceType').value==='prestamo';
+  byId('loanFields').classList.toggle('hidden-inline',!isLoan);
+  if(!isLoan){
+    byId('advanceCuotas').value='1';
+    byId('advanceCuotaFija').value='0';
+  }
+}
+function clearAdvanceForm(){
+  byId('advanceId').value='';
+  byId('advanceForm').reset();
+  byId('advanceDate').value=today();
+  byId('advanceAmount').value='0';
+  byId('advanceStatus').value='pendiente';
+  byId('advanceCuotas').value='1';
+  byId('advanceCuotaFija').value='0';
+  if(byId('advanceFirstDue')) byId('advanceFirstDue').value=today();
+  if(byId('advanceFrequency')) byId('advanceFrequency').value='mensual';
+  toggleAdvanceLoanFields();
+}
+byId('advanceForm').addEventListener('submit',e=>{
+  e.preventDefault(); if(!canEdit()) return;
+  const id=byId('advanceId').value||uid();
+  const workerId=byId('advanceWorker').value;
+  const worker=state.workers.find(w=>w.id===workerId);
+  if(!worker){alert('Selecciona un trabajador.'); return}
+  const item={
+    id, workerId, workerName:worker.nombre,
+    fecha:byId('advanceDate').value||today(),
+    monto:num(byId('advanceAmount').value),
+    tipo:byId('advanceType').value,
+    estado:byId('advanceStatus').value,
+    cuotas: byId('advanceType').value==='prestamo' ? Math.max(1,parseInt(byId('advanceCuotas').value||'1',10)) : 1,
+    cuotasPagadas: 0,
+    cuotaFija: byId('advanceType').value==='prestamo' ? num(byId('advanceCuotaFija').value) : 0,
+    primeraCuotaFecha: byId('advanceType').value==='prestamo' ? (byId('advanceFirstDue').value||byId('advanceDate').value||today()) : '',
+    frecuenciaCobro: byId('advanceType').value==='prestamo' ? (byId('advanceFrequency').value||'mensual') : 'unica',
+    periodosAplicados: [],
+    saldo: num(byId('advanceAmount').value),
+    nota:byId('advanceNote').value.trim(),
+    registradoPor:state.currentUser?.name||''
+  };
+  const ix=state.advances.findIndex(a=>a.id===id);
+  if(ix>=0) state.advances[ix]=item; else state.advances.unshift(item);
+  logAudit(item.tipo==='prestamo'?'Préstamo guardado':'Adelanto guardado', `${item.workerName} · ${money(item.monto)}`); saveState(); clearAdvanceForm(); renderAll(); alert('Movimiento guardado.');
+});
+function editAdvance(id){
+  if(!canEdit()) return;
+  const a=state.advances.find(x=>x.id===id); if(!a) return;
+  byId('advanceId').value=a.id;
+  byId('advanceWorker').value=a.workerId;
+  byId('advanceDate').value=a.fecha||today();
+  byId('advanceAmount').value=a.monto??0;
+  byId('advanceType').value=a.tipo||'adelanto';
+  byId('advanceStatus').value=a.estado||'pendiente';
+  byId('advanceCuotas').value=a.cuotas||1;
+  byId('advanceCuotaFija').value=a.cuotaFija||0;
+  if(byId('advanceFirstDue')) byId('advanceFirstDue').value=a.primeraCuotaFecha||a.fecha||today();
+  if(byId('advanceFrequency')) byId('advanceFrequency').value=a.frecuenciaCobro||'mensual';
+  byId('advanceNote').value=a.nota||'';
+  toggleAdvanceLoanFields();
+  showTab('advances');
+}
+function deleteAdvance(id){
+  if(!canEdit()) return;
+  if(!confirm('¿Eliminar adelanto?')) return;
+  state.advances=state.advances.filter(x=>x.id!==id);
+  saveState(); renderAll();
+}
+function renderAdvances(){
+  const txt=byId('advSearch').value.trim().toLowerCase();
+  const month=byId('advMonth').value;
+  const st=byId('advFilterStatus').value;
+  const tp=byId('advFilterType').value;
+  let rows=state.advances.slice();
+  if(txt) rows=rows.filter(r=>`${r.workerName} ${r.nota}`.toLowerCase().includes(txt));
+  if(month) rows=rows.filter(r=>monthValue(r.fecha)===month);
+  if(st) rows=rows.filter(r=>r.estado===st);
+  if(tp) rows=rows.filter(r=>r.tipo===tp);
+  const tbody=byId('advancesTable');
+  if(!rows.length){tbody.innerHTML='<tr><td colspan="8" class="empty">No hay adelantos registrados.</td></tr>'; return;}
+  tbody.innerHTML=rows.map(r=>`
+    <tr>
+      <td>${safe(r.fecha)}</td>
+      <td><b>${safe(r.workerName)}</b></td>
+      <td><span class="pill ${r.tipo==='prestamo'?'purple':'orange'}">${safe(r.tipo)}</span></td>
+      <td>${money(r.monto)}</td>
+      <td>${r.tipo==='prestamo' ? `${money(r.saldo??r.monto)} · ${num(r.cuotasPagadas||0)}/${num(r.cuotas||1)} cuotas <div class="small">${safe(r.frecuenciaCobro||'mensual')} · 1ra cuota: ${safe(r.primeraCuotaFecha||r.fecha||'')}</div>` : '—'}</td>
+      <td><span class="pill ${r.estado==='pendiente'?'orange':'green'}">${safe(r.estado)}</span></td>
+      <td>${safe(r.nota||'')}</td>
+      <td>${canEdit()?`<div class="toolbar"><button class="btn" onclick="editAdvance('${r.id}')">Editar</button><button class="btn danger" onclick="deleteAdvance('${r.id}')">Eliminar</button></div>`:'—'}</td>
+    </tr>
+  `).join('');
+}
+function fillWorkerSelects(){
+  const sel=byId('advanceWorker');
+  const current=sel.value;
+  const options=activeWorkers().map(w=>`<option value="${w.id}">${safe(w.nombre)} · ${safe(w.cargo||'')}</option>`).join('');
+  sel.innerHTML=options || '<option value="">Sin trabajadores activos</option>';
+  if(current && [...sel.options].some(o=>o.value===current)) sel.value=current;
+}
+
+function basePeriodo(w){return w.tipoPago==='quincenal' ? num(w.sueldoBase)/2 : num(w.sueldoBase)}
+function valorHora(w){return num(w.sueldoBase)/Math.max(num(state.config.diasMes),1)/Math.max(num(state.config.horasDia),1)}
+function precioHoraExtraTrabajador(w){return num(w.precioHoraExtra)>0 ? num(w.precioHoraExtra) : valorHora(w)*num(state.config.factorHorasExtra)}
+function pensionMonto(w,base){
+  if(w.pension==='AFP') return base*((num(w.afpComision)+num(w.afpPrima)+10)/100);
+  if(w.pension==='ONP') return base*(num(w.onpPorcentaje)/100);
+  return 0;
+}
+function seguroMonto(w,base){
+  if(w.seguro==='EsSalud') return base*(num(state.config.esSaludPct)/100);
+  if(w.seguro==='EPS') return base*(num(state.config.epsPct)/100);
+  return 0;
+}
+function descuentoFalta(w,faltas){return (num(w.sueldoBase)/Math.max(num(state.config.diasMes),1))*num(faltas)}
+function cuotaPrestamo(item){
+  const cuotaBase=num(item.cuotaFija);
+  if(cuotaBase>0) return Math.min(cuotaBase,num(item.saldo??item.monto));
+  const cuotasRestantes=Math.max(1,num(item.cuotas||1)-num(item.cuotasPagadas||0));
+  return Math.min(num(item.saldo??item.monto), num(item.monto)/Math.max(cuotasRestantes,1));
+}
+function getPendingAdvancesForPeriod(workerId,start,end){
+  return state.advances.filter(a=>a.workerId===workerId && a.estado==='pendiente' && a.tipo!=='prestamo' && inRange(a.fecha,start,end))
+}
+function getPendingLoans(workerId,start,end){
+  const worker=state.workers.find(w=>w.id===workerId);
+  return state.advances.filter(a=>a.workerId===workerId && a.tipo==='prestamo' && a.estado==='pendiente' && num(a.saldo??a.monto)>0 && loanDueInPeriod(a,worker,start,end) && !loanAlreadyApplied(a,start,end));
+}
+function sumPendingAdvances(workerId,start,end){
+  const direct=getPendingAdvancesForPeriod(workerId,start,end).reduce((s,a)=>s+num(a.monto),0);
+  const loans=getPendingLoans(workerId,start,end).reduce((s,a)=>s+cuotaPrestamo(a),0);
+  return direct+loans;
+}
+function applyDiscountsToAdvances(workerId,start,end){
+  getPendingAdvancesForPeriod(workerId,start,end).forEach(a=>a.estado='descontado');
+  getPendingLoans(workerId,start,end).forEach(a=>{
+    const cuota=cuotaPrestamo(a);
+    a.saldo=Math.max(0,num(a.saldo??a.monto)-cuota);
+    a.cuotasPagadas=num(a.cuotasPagadas||0)+1;
+    markLoanApplied(a,start,end);
+    if(num(a.saldo)<=0 || num(a.cuotasPagadas)>=num(a.cuotas||1)) a.estado='descontado';
+  });
+}
+
+function monthsBetween(start,end){
+  if(!start||!end) return 0;
+  const a=new Date(start+'T00:00:00'); const b=new Date(end+'T00:00:00');
+  let months=(b.getFullYear()-a.getFullYear())*12 + (b.getMonth()-a.getMonth());
+  if(b.getDate()>=a.getDate()) months+=1;
+  return Math.max(0,months);
+}
+function semesterMonths(start,end){
+  if(!end) return 0;
+  const e=new Date(end+'T00:00:00');
+  const semStart=(e.getMonth()<6?`${e.getFullYear()}-01-01`:`${e.getFullYear()}-07-01`);
+  const s=start && start>semStart ? start : semStart;
+  return Math.min(6,monthsBetween(s,end));
+}
+function autoCTS(w,end){
+  if((w.regimen||'general')==='parcial') return 0;
+  const months=semesterMonths(w.fechaIngreso,end);
+  return (num(w.sueldoBase)/12)*months;
+}
+function autoGrati(w,end){
+  if((w.regimen||'general')==='parcial') return 0;
+  const months=semesterMonths(w.fechaIngreso,end);
+  return (num(w.sueldoBase)/6)*months;
+}
+function autoVacacionesMonto(w,dias){
+  if((w.regimen||'general')==='parcial') return 0;
+  return (num(w.sueldoBase)/30)*num(dias);
+}
+
+function renderPlanilla(){
+  const tipo=byId('tipoPlanilla').value;
+  const tbody=byId('planillaBody');
+  const inicio=byId('fechaInicio').value||today();
+  const fin=byId('fechaFin').value||today();
+  const selected=activeWorkers().filter(w=>tipo==='todos'||w.tipoPago===tipo);
+  if(!selected.length){tbody.innerHTML='<tr><td colspan="16" class="empty">No hay trabajadores para este filtro.</td></tr>'; updateTotals([]); return;}
+  tbody.innerHTML=selected.map(w=>{
+    const base=basePeriodo(w);
+    const pension=pensionMonto(w,base);
+    const asign=0;
+    const adelAuto=sumPendingAdvances(w.id,inicio,fin);
+    const cts=0, grati=0, vacDias=0, vacMonto=0;
+    const neto=Math.max(base+asign+cts+grati+vacMonto-pension-adelAuto,0);
+    return `<tr data-id="${w.id}">
+      <td><b>${safe(w.nombre)}</b><div class="small">${safe(w.dni)} · ${safe(w.cargo||'')} · ${safe((w.regimen||'general').toUpperCase())} · ${safe(w.centroCosto||'')}</div></td>
+      <td class="base">${money(base)}</td>
+      <td class="hide-enterprise-removed"><input type="number" step="0.01" class="asig" value="0" oninput="recalcRow(this)"></td>
+      <td class="hide-enterprise-removed"><input type="number" step="0.01" class="bono" value="0" oninput="recalcRow(this)"></td>
+      <td class="hide-enterprise-removed"><input type="number" step="0.01" class="mov" value="0" oninput="recalcRow(this)"></td>
+      <td><input type="number" step="0.01" class="he" value="0" oninput="recalcRow(this)"></td>
+      <td><input type="number" step="0.01" min="0" class="precio-he" value="${precioHoraExtraTrabajador(w).toFixed(2)}" oninput="recalcRow(this)"></td>
+      <td><input type="number" step="0.01" class="cts" value="${cts.toFixed(2)}" oninput="recalcRow(this)"></td>
+      <td><input type="number" step="0.01" class="grati" value="${grati.toFixed(2)}" oninput="recalcRow(this)"></td>
+      <td><input type="number" step="0.01" class="vacdias" value="${vacDias.toFixed(2)}" oninput="syncVacaciones(this)"></td>
+      <td><input type="number" step="0.01" class="vacaciones" value="${vacMonto.toFixed(2)}" oninput="recalcRow(this)"></td>
+      <td><input type="number" step="0.01" class="adel" value="${adelAuto.toFixed(2)}" oninput="recalcRow(this)"></td>
+      <td><input type="number" step="0.01" class="faltas" value="0" oninput="recalcRow(this)"></td>
+      <td><input type="number" step="0.01" class="otros" value="0" oninput="recalcRow(this)"></td>
+      <td class="pension">${money(pension)}</td>
+      <td class="neto">${money(neto)}</td>
+    </tr>`;
+  }).join('');
+  updateTotalsFromDOM();
+}
+function precioHoraExtraFila(tr,w){const custom=num(tr.querySelector('.precio-he').value); return custom>0 ? custom : precioHoraExtraTrabajador(w)}
+function syncVacaciones(el){
+  const tr=el.closest('tr'); const id=tr.dataset.id; const w=state.workers.find(x=>x.id===id); if(!w) return;
+  tr.querySelector('.vacaciones').value=autoVacacionesMonto(w,num(el.value)).toFixed(2);
+  recalcRow(el);
+}
+function aplicarCTSTodas(){ const fin=byId('fechaFin').value||today(); [...byId('planillaBody').querySelectorAll('tr[data-id]')].forEach(tr=>{const w=state.workers.find(x=>x.id===tr.dataset.id); if(w) tr.querySelector('.cts').value=autoCTS(w,fin).toFixed(2);}); updateTotalsFromDOM(); }
+function aplicarGratiTodas(){ const fin=byId('fechaFin').value||today(); [...byId('planillaBody').querySelectorAll('tr[data-id]')].forEach(tr=>{const w=state.workers.find(x=>x.id===tr.dataset.id); if(w) tr.querySelector('.grati').value=autoGrati(w,fin).toFixed(2);}); updateTotalsFromDOM(); }
+function aplicarVacacionesTodas(){ [...byId('planillaBody').querySelectorAll('tr[data-id]')].forEach(tr=>{const w=state.workers.find(x=>x.id===tr.dataset.id); if(w){ tr.querySelector('.vacdias').value='30.00'; tr.querySelector('.vacaciones').value=autoVacacionesMonto(w,30).toFixed(2);} }); updateTotalsFromDOM(); }
+function recalcRow(el){
+  const tr=el.closest('tr'); const id=tr.dataset.id; const w=state.workers.find(x=>x.id===id); if(!w) return;
+  const base=basePeriodo(w);
+  const asig=num(tr.querySelector('.asig').value);
+  const bono=num(tr.querySelector('.bono').value);
+  const mov=num(tr.querySelector('.mov').value);
+  const heMonto=num(tr.querySelector('.he').value)*precioHoraExtraFila(tr,w);
+  const cts=num(tr.querySelector('.cts').value);
+  const grati=num(tr.querySelector('.grati').value);
+  const vac=num(tr.querySelector('.vacaciones').value);
+  const adel=num(tr.querySelector('.adel').value);
+  const faltasMonto=descuentoFalta(w,num(tr.querySelector('.faltas').value));
+  const otros=num(tr.querySelector('.otros').value);
+  const pension=pensionMonto(w,base);
+  const neto=Math.max(base+asig+bono+mov+heMonto+cts+grati+vac-(adel+faltasMonto+otros+pension),0);
+  tr.querySelector('.pension').textContent=money(pension);
+  tr.querySelector('.neto').textContent=money(neto);
+  updateTotalsFromDOM();
+}
+function updateTotals(rows){
+  let base=0,asig=0,bonos=0,he=0,benef=0,dsctos=0,neto=0;
+  rows.forEach(r=>{base+=r.base; asig+=r.asignacion; bonos+=r.bonos; he+=r.horasExtraMonto; benef+=(r.cts||0)+(r.gratificacion||0)+(r.vacaciones||0); dsctos+=r.descuentosTotal+r.pension; neto+=r.neto;});
+  byId('totalBruto').textContent=money(base);
+  byId('totalAsignacion').textContent=money(asig);
+  byId('totalBonos').textContent=money(bonos);
+  byId('totalHorasExtra').textContent=money(he);
+  byId('totalBeneficios').textContent=money(benef);
+  byId('totalDescuentos').textContent=money(dsctos);
+  byId('totalNeto').textContent=money(neto);
+  byId('stPayroll').textContent=money(neto);
+}
+function updateTotalsFromDOM(){
+  const rows=[...byId('planillaBody').querySelectorAll('tr[data-id]')].map(tr=>{
+    const id=tr.dataset.id; const w=state.workers.find(x=>x.id===id);
+    const base=basePeriodo(w);
+    const asign=num(tr.querySelector('.asig').value);
+    const bono=num(tr.querySelector('.bono').value);
+    const mov=num(tr.querySelector('.mov').value);
+    const precioHE=precioHoraExtraFila(tr,w);
+    const heMonto=num(tr.querySelector('.he').value)*precioHE;
+    const cts=num(tr.querySelector('.cts').value);
+    const grati=num(tr.querySelector('.grati').value);
+    const vac=num(tr.querySelector('.vacaciones').value);
+    const adel=num(tr.querySelector('.adel').value);
+    const faltasMonto=descuentoFalta(w,num(tr.querySelector('.faltas').value));
+    const otros=num(tr.querySelector('.otros').value);
+    const pension=pensionMonto(w,base);
+    const neto=Math.max(base+asign+bono+mov+heMonto+cts+grati+vac-(adel+faltasMonto+otros+pension),0);
+    return {base,asignacion:asign,bonos:bono+mov,horasExtraMonto:heMonto,cts,gratificacion:grati,vacaciones:vac,descuentosTotal:adel+faltasMonto+otros,pension,neto};
+  });
+  updateTotals(rows);
+}
+function guardarPagos(){
+  if(!canEdit()) return;
+  const periodo=byId('periodoNombre').value.trim();
+  const inicio=byId('fechaInicio').value||today();
+  const fin=byId('fechaFin').value||today();
+  const estadoPago=byId('estadoPago').value;
+  if(!periodo){alert('Ingresa el nombre del periodo.'); return;}
+  const trs=[...byId('planillaBody').querySelectorAll('tr[data-id]')];
+  if(!trs.length){alert('Primero calcula la planilla.'); return;}
+  let boletaNum = state.history.length+1;
+  trs.forEach(tr=>{
+    const id=tr.dataset.id; const w=state.workers.find(x=>x.id===id); if(!w) return;
+    const base=basePeriodo(w);
+    const asignacion=num(tr.querySelector('.asig').value);
+    const bono=num(tr.querySelector('.bono').value);
+    const movilidad=num(tr.querySelector('.mov').value);
+    const horasExtra=num(tr.querySelector('.he').value);
+    const precioHoraExtra=precioHoraExtraFila(tr,w);
+    const horasExtraMonto=horasExtra*precioHoraExtra;
+    const cts=num(tr.querySelector('.cts').value);
+    const gratificacion=num(tr.querySelector('.grati').value);
+    const vacacionesDias=num(tr.querySelector('.vacdias').value);
+    const vacaciones=num(tr.querySelector('.vacaciones').value);
+    const adelantos=num(tr.querySelector('.adel').value);
+    const faltas=num(tr.querySelector('.faltas').value);
+    const faltasMonto=descuentoFalta(w,faltas);
+    const otrosDescuentos=num(tr.querySelector('.otros').value);
+    const pension=pensionMonto(w,base);
+    const seguro=seguroMonto(w,base);
+    const neto=Math.max(base+asignacion+bono+movilidad+horasExtraMonto+cts+gratificacion+vacaciones-(adelantos+faltasMonto+otrosDescuentos+pension),0);
+    applyDiscountsToAdvances(w.id,inicio,fin);
+    state.history.unshift({
+      id:uid(),
+      boleta:boletaCode(boletaNum++),
+      workerId:w.id,
+      nombre:w.nombre,dni:w.dni,cargo:w.cargo,area:w.area,
+      periodo,tipo:w.tipoPago,estadoPago,
+      fecha:today(),fechaInicio:inicio,fechaFin:fin,
+      base,asignacion:0,bono:0,movilidad:0,horasExtra,precioHoraExtra,horasExtraMonto,cts,gratificacion,vacacionesDias,vacaciones,
+      adelantos,faltas,faltasMonto,otrosDescuentos,
+      descuentosTotal:adelantos+faltasMonto+otrosDescuentos,
+      pension,seguro,neto,
+      banco:w.banco,telefono:w.telefono||'',cuenta:w.cuenta,monedaCuenta:w.monedaCuenta,
+      pensionTipo:w.pension,seguroTipo:w.seguro,
+      registradoPor:state.currentUser?.name||'',
+      firmaTrabajador: state.payrollSignature||'',
+      observacionPago: (byId('payrollNote')?.value||'').trim()
+    });
+  });
+  logAudit('Planilla guardada', `${periodo} · ${trs.length} pagos`); saveState(); renderAll(); alert('Pagos guardados correctamente.'); showTab('history');
+}
+
+function renderHistory(){
+  const txt=byId('searchText').value.trim().toLowerCase();
+  const tipo=byId('filterTipo').value;
+  const mes=byId('filterFecha').value;
+  const estado=byId('filterStatus').value;
+  const area=(byId('filterAreaHistory')?.value||'').trim().toLowerCase();
+  let rows=state.history.slice();
+  if(txt) rows=rows.filter(r=>`${r.nombre} ${r.dni} ${r.periodo} ${r.boleta||''}`.toLowerCase().includes(txt));
+  if(tipo) rows=rows.filter(r=>r.tipo===tipo);
+  if(mes) rows=rows.filter(r=>monthValue(r.fecha)===mes || monthValue(r.fechaInicio)===mes || monthValue(r.fechaFin)===mes);
+  if(estado) rows=rows.filter(r=>r.estadoPago===estado);
+  if(area) rows=rows.filter(r=>`${r.area||''}`.toLowerCase().includes(area));
+  const tbody=byId('historyTable');
+  if(!rows.length){tbody.innerHTML='<tr><td colspan="8" class="empty">No hay pagos registrados.</td></tr>'; return;}
+  tbody.innerHTML=rows.map(r=>`
+    <tr>
+      <td>${safe(r.fecha)}</td>
+      <td><b>${safe(r.boleta||'')}</b></td>
+      <td>${safe(r.periodo)}</td>
+      <td><b>${safe(r.nombre)}</b><div class="small">${safe(r.dni||'')}</div></td>
+      <td><span class="pill ${r.tipo==='quincenal'?'blue':'green'}">${safe(r.tipo)}</span></td>
+      <td><span class="pill ${r.estadoPago==='pendiente'?'orange':'green'}">${safe(r.estadoPago||'pagado')}</span></td>
+      <td>${money(r.neto)}</td>
+      <td><div class="toolbar"><button class="btn" onclick="imprimirBoleta('${r.id}')">Boleta PDF</button><button class="btn primary" onclick="enviarBoletaWhatsApp('${r.id}')">WhatsApp</button><button class="btn warn" onclick="toggleStatus('${r.id}')">Cambiar estado</button>${canEdit()?`<button class="btn danger" onclick="deletePayment('${r.id}')">Eliminar</button>`:''}</div></td>
+    </tr>
+  `).join('');
+}
+function toggleStatus(id){
+  if(!canEdit()) return;
+  const r=state.history.find(x=>x.id===id); if(!r) return;
+  r.estadoPago=r.estadoPago==='pagado'?'pendiente':'pagado';
+  saveState(); renderHistory(); renderDashboard();
+}
+function deletePayment(id){
+  if(!canEdit()) return;
+  if(!confirm('¿Eliminar este pago del historial?')) return;
+  state.history=state.history.filter(x=>x.id!==id);
+  saveState(); renderAll();
+}
+
+function renderDashboard(){
+  byId('companyBadge').textContent=`${state.config.empresa} · ${roleLabel(state.currentUser.role)}`;
+  byId('companyInfo').innerHTML=`
+    <div><b>Empresa:</b> ${safe(state.config.empresa)}</div>
+    <div><b>RUC / detalle:</b> ${safe(state.config.ruc)}</div>
+    <div><b>Dirección:</b> ${safe(state.config.direccion)}</div>
+    <div><b>EsSalud:</b> ${num(state.config.esSaludPct)}% · <b>EPS:</b> ${num(state.config.epsPct)}%</div>
+    <div><b>Horas por día:</b> ${num(state.config.horasDia)} · <b>Días del mes:</b> ${num(state.config.diasMes)}</div>
+    <div><b>Serie boleta:</b> ${safe(state.config.serieBoleta)} · <b>Factor hora extra:</b> ${num(state.config.factorHorasExtra)}x</div>
+  `;
+  const paidCount=state.history.filter(x=>x.estadoPago==='pagado').length;
+  const pendingCount=state.history.filter(x=>x.estadoPago==='pendiente').length;
+  const advancesPending=state.advances.filter(a=>a.estado==='pendiente').reduce((s,a)=>s+num(a.saldo??a.monto),0);
+  byId('dashboardInfo').innerHTML=`
+    <div style="display:grid;gap:10px">
+      <div class="total-box"><span>Total pagado</span><b>${money(state.history.filter(x=>x.estadoPago==='pagado').reduce((s,x)=>s+num(x.neto),0))}</b></div>
+      <div class="total-box"><span>Boletas pagadas / pendientes</span><b>${paidCount} / ${pendingCount}</b></div>
+      <div class="total-box"><span>Adelantos y préstamos pendientes</span><b>${money(advancesPending)}</b></div>
+      <div class="total-box"><span>Trabajadores activos / inactivos</span><b>${activeWorkers().length} / ${state.workers.filter(w=>w.estado==='inactivo').length}</b></div>
+    </div>
+  `;
+  const last=[...state.history.slice(0,4).map(x=>({tipo:'Pago',fecha:x.fecha,titulo:`${x.nombre} · ${x.periodo}`,monto:x.neto,color:'green'})), ...state.advances.slice(0,4).map(x=>({tipo:'Adelanto',fecha:x.fecha,titulo:`${x.workerName} · ${x.tipo}`,monto:x.monto,color:x.estado==='pendiente'?'orange':'blue'}))].sort((a,b)=>String(b.fecha).localeCompare(String(a.fecha))).slice(0,6);
+  byId('lastMovements').innerHTML=last.length?last.map(m=>`<div style="padding:10px 0;border-bottom:1px solid #1d2c47"><span class="pill ${m.color}">${safe(m.tipo)}</span><div><b>${safe(m.titulo)}</b></div><div class="small">${safe(m.fecha)}</div><div>${money(m.monto)}</div></div>`).join(''):'<div class="empty">Aún no hay movimientos.</div>';
+  renderMonthlyChart();
+}
+function renderMonthlyChart(){
+  const box=byId('monthlyChart');
+  const grouped={};
+  state.history.forEach(r=>{
+    const key=monthValue(r.fechaInicio||r.fecha||today());
+    grouped[key]=(grouped[key]||0)+num(r.neto);
+  });
+  const entries=Object.entries(grouped).sort((a,b)=>a[0].localeCompare(b[0])).slice(-6);
+  if(!entries.length){box.innerHTML='<div class="empty">Aún no hay historial suficiente para mostrar gráfico.</div>'; return;}
+  const values=entries.map(e=>e[1]); const max=Math.max(...values,1);
+  const width=520, height=180, pad=28, bw=52, gap=28;
+  const bars=entries.map((e,i)=>{
+    const h=Math.round((e[1]/max)*(height-40));
+    const x=pad+i*(bw+gap)+12; const y=height-h;
+    return `<g><rect x="${x}" y="${y}" width="${bw}" height="${h}" rx="10" fill="url(#g1)"></rect><text x="${x+bw/2}" y="${y-8}" text-anchor="middle" fill="#dff4ff" font-size="11">${(e[1]).toFixed(0)}</text><text x="${x+bw/2}" y="${height+18}" text-anchor="middle" fill="#9db2d1" font-size="11">${safe(e[0])}</text></g>`;
+  }).join('');
+  box.innerHTML=`<svg viewBox="0 0 ${width} 220" width="100%" height="100%" preserveAspectRatio="xMidYMid meet">
+    <defs><linearGradient id="g1" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#5eb9ff"/><stop offset="100%" stop-color="#28c7a0"/></linearGradient></defs>
+    <line x1="16" y1="${height}" x2="${width-12}" y2="${height}" stroke="#274067"/>
+    ${bars}
+  </svg>`;
+}
+function renderStats(){
+  byId('loginLogo').textContent=safe(state.config.logo||'HP');
+  const pendingAdvances=state.advances.filter(a=>a.estado==='pendiente').reduce((s,a)=>s+num(a.saldo??a.monto),0);
+  byId('stWorkers').textContent=activeWorkers().length;
+  byId('stPaid').textContent=state.history.length;
+  byId('stAdvances').textContent=money(pendingAdvances);
+  byId('stPeriod').textContent=byId('periodoNombre').value.trim()||'—';
+}
+
+function openConfig(){fillConfig(); byId('configModal').classList.add('open')}
+function closeConfig(){byId('configModal').classList.remove('open')}
+function fillConfig(){
+  byId('cfgEmpresa').value=state.config.empresa;
+  byId('cfgRuc').value=state.config.ruc;
+  byId('cfgMoneda').value=state.config.moneda;
+  byId('cfgLogo').value=state.config.logo;
+  byId('cfgEsSalud').value=state.config.esSaludPct;
+  byId('cfgEPS').value=state.config.epsPct;
+  byId('cfgHorasDia').value=state.config.horasDia;
+  byId('cfgDiasMes').value=state.config.diasMes;
+  byId('cfgFactorHE').value=state.config.factorHorasExtra;
+  byId('cfgSerieBoleta').value=state.config.serieBoleta;
+  byId('cfgDireccion').value=state.config.direccion;
+}
+byId('configForm').addEventListener('submit',e=>{
+  e.preventDefault(); if(!canEdit()) return;
+  state.config.empresa=byId('cfgEmpresa').value.trim();
+  state.config.ruc=byId('cfgRuc').value.trim();
+  state.config.moneda=byId('cfgMoneda').value.trim()||'S/.';
+  state.config.logo=(byId('cfgLogo').value.trim()||'HP').slice(0,3).toUpperCase();
+  state.config.esSaludPct=num(byId('cfgEsSalud').value);
+  state.config.epsPct=num(byId('cfgEPS').value);
+  state.config.horasDia=num(byId('cfgHorasDia').value)||8;
+  state.config.diasMes=num(byId('cfgDiasMes').value)||30;
+  state.config.factorHorasExtra=num(byId('cfgFactorHE').value)||1.25;
+  state.config.serieBoleta=byId('cfgSerieBoleta').value.trim()||'BOL';
+  state.config.direccion=byId('cfgDireccion').value.trim();
+  logAudit('Configuración actualizada', state.config.empresa); saveState(); closeConfig(); renderAll(); alert('Configuración guardada.');
+});
+
+function clearSystemUserForm(){byId('sysUserId').value=''; byId('sysUserForm').reset(); byId('sysRol').value='admin'}
+byId('sysUserForm').addEventListener('submit',e=>{
+  e.preventDefault(); if(!isAdmin()) return;
+  const id=byId('sysUserId').value||uid();
+  const u={id,name:byId('sysNombre').value.trim(),username:byId('sysUsuario').value.trim(),password:byId('sysClave').value,role:byId('sysRol').value};
+  const ix=state.users.findIndex(x=>x.id===id);
+  if(ix>=0) state.users[ix]=u; else state.users.push(u);
+  saveState(); clearSystemUserForm(); renderSystemUsers(); alert('Usuario guardado.');
+});
+function editSystemUser(id){
+  if(!isAdmin()) return;
+  const u=state.users.find(x=>x.id===id); if(!u) return;
+  byId('sysUserId').value=u.id; byId('sysNombre').value=u.name; byId('sysUsuario').value=u.username; byId('sysClave').value=u.password; byId('sysRol').value=u.role;
+}
+function deleteSystemUser(id){
+  if(!isAdmin()) return;
+  const u=state.users.find(x=>x.id===id);
+  if(u?.username==='admin'){alert('No se puede eliminar el usuario admin demo.'); return;}
+  if(!confirm('¿Eliminar usuario?')) return;
+  state.users=state.users.filter(x=>x.id!==id);
+  saveState(); renderSystemUsers();
+}
+function logAudit(action,detail){
+  state.audit=state.audit||[];
+  state.audit.unshift({id:uid(),fecha:today(),usuario:state.currentUser?.name||'Sistema',accion:action,detalle:detail||''});
+  state.audit=state.audit.slice(0,500);
+}
+function renderAudit(){
+  const tbody=byId('auditTable'); if(!tbody) return;
+  const txt=(byId('auditSearch')?.value||'').trim().toLowerCase();
+  const mes=(byId('auditMonth')?.value||'').trim();
+  let rows=(state.audit||[]).slice();
+  if(txt) rows=rows.filter(r=>`${r.usuario} ${r.accion} ${r.detalle}`.toLowerCase().includes(txt));
+  if(mes) rows=rows.filter(r=>monthValue(r.fecha)===mes);
+  tbody.innerHTML=rows.length ? rows.map(r=>`<tr><td>${safe(r.fecha)}</td><td>${safe(r.usuario)}</td><td>${safe(r.accion)}</td><td>${safe(r.detalle)}</td></tr>`).join('') : '<tr><td colspan="4" class="empty">Sin movimientos de auditoría.</td></tr>';
+}
+function renderSystemUsers(){
+  const tbody=byId('sysUsersTable');
+  tbody.innerHTML=state.users.map(u=>`
+    <tr>
+      <td>${safe(u.name)}</td>
+      <td>${safe(u.username)}</td>
+      <td><span class="pill ${u.role==='admin'?'orange':u.role==='rrhh'?'blue':'green'}">${roleLabel(u.role)}</span></td>
+      <td>${isAdmin()?`<div class="toolbar"><button class="btn" onclick="editSystemUser('${u.id}')">Editar</button><button class="btn danger" onclick="deleteSystemUser('${u.id}')">Eliminar</button></div>`:'—'}</td>
+    </tr>
+  `).join('');
+}
+
+function exportData(){
+  const blob=new Blob([JSON.stringify({workers:state.workers,advances:state.advances,history:state.history,audit:state.audit,users:state.users,config:state.config},null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='respaldo_pagos_trabajadores_empresa_grande_v8.json'; a.click(); URL.revokeObjectURL(a.href);
+}
+byId('importFile').addEventListener('change',e=>{
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const data=JSON.parse(reader.result);
+      if(Array.isArray(data.workers)) state.workers=data.workers;
+      if(Array.isArray(data.advances)) state.advances=data.advances;
+      if(Array.isArray(data.history)) state.history=data.history;
+      if(Array.isArray(data.audit)) state.audit=data.audit;
+      if(Array.isArray(data.users)&&data.users.length) state.users=data.users;
+      if(data.config) state.config={...state.config,...data.config};
+      logAudit('Respaldo importado', file.name||'archivo'); saveState(); renderAll(); alert('Respaldo importado correctamente.');
+    }catch(err){alert('No se pudo importar el archivo.');}
+  };
+  reader.readAsText(file);
+  e.target.value='';
+});
+
+function imprimirBoleta(id){
+  const r=state.history.find(x=>x.id===id); if(!r) return;
+  const html=`<div style="font-family:Arial,sans-serif;color:#111;padding:26px;max-width:920px;margin:auto">
+    <h2 style="margin:0 0 8px">${safe(state.config.empresa)}</h2>
+    <div>${safe(state.config.ruc)}<br>${safe(state.config.direccion)}</div>
+    <hr>
+    <h3 style="margin:0 0 12px">Boleta Individual de Pago</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:13px">
+      <tr><td><b>Boleta:</b> ${safe(r.boleta||'')}</td><td><b>Fecha:</b> ${safe(r.fecha)}</td></tr>
+      <tr><td><b>Trabajador:</b> ${safe(r.nombre)}</td><td><b>DNI:</b> ${safe(r.dni||'')}</td></tr>
+      <tr><td><b>Cargo / Área:</b> ${safe(r.cargo||'')} ${r.area?`- ${safe(r.area)}`:''}</td><td><b>Periodo:</b> ${safe(r.periodo)}</td></tr>
+      <tr><td><b>Desde:</b> ${safe(r.fechaInicio||'')}</td><td><b>Hasta:</b> ${safe(r.fechaFin||'')}</td></tr>
+      <tr><td><b>Banco:</b> ${safe(r.banco||'')}</td><td><b>Cuenta:</b> ${safe(r.cuenta||'')}</td></tr>
+      <tr><td><b>WhatsApp:</b> ${safe(r.telefono||'')}</td><td><b>Estado pago:</b> ${safe(r.estadoPago||'pagado')}</td></tr>
+    </table>
+    <div style="margin-top:16px;border:1px solid #ddd;border-radius:12px;padding:12px">
+      <table style="width:100%;border-collapse:collapse">
+        <tr><td>Base</td><td style="text-align:right">${money(r.base)}</td></tr>
+        <tr><td>Horas extras (${num(r.horasExtra).toFixed(2)} h × ${money(r.precioHoraExtra||0)})</td><td style="text-align:right">${money(r.horasExtraMonto)}</td></tr>
+        <tr><td>CTS</td><td style="text-align:right">${money(r.cts||0)}</td></tr>
+        <tr><td>Gratificación</td><td style="text-align:right">${money(r.gratificacion||0)}</td></tr>
+        <tr><td>Vacaciones (${num(r.vacacionesDias||0).toFixed(2)} días)</td><td style="text-align:right">${money(r.vacaciones||0)}</td></tr>
+        <tr><td>Adelantos</td><td style="text-align:right">-${money(r.adelantos)}</td></tr>
+        <tr><td>Faltas</td><td style="text-align:right">-${money(r.faltasMonto)}</td></tr>
+        <tr><td>Otros descuentos</td><td style="text-align:right">-${money(r.otrosDescuentos)}</td></tr>
+        <tr><td>${safe(r.pensionTipo||'Pensión')}</td><td style="text-align:right">-${money(r.pension)}</td></tr>
+        <tr><td>${safe(r.seguroTipo||'Seguro')} (referencial)</td><td style="text-align:right">${money(r.seguro)}</td></tr>
+        <tr><td><b>Neto a pagar</b></td><td style="text-align:right"><b>${money(r.neto)}</b></td></tr>
+      </table>
+    </div>
+    <div style="margin-top:20px"><b>Estado:</b> ${safe(r.estadoPago||'pagado')}<br>Registrado por: ${safe(r.registradoPor||'')}<br>${r.observacionPago?`<b>Observación:</b> ${safe(r.observacionPago)}`:''}</div>
+    <div style="margin-top:40px;display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:end">
+      <div style="text-align:center">${r.firmaTrabajador?`<img src="${r.firmaTrabajador}" style="max-width:100%;height:90px;object-fit:contain"><div style="border-top:1px solid #222;padding-top:8px">Firma del trabajador</div>`:`<div style="border-top:1px solid #222;padding-top:8px">Firma del trabajador</div>`}</div>
+      <div style="border-top:1px solid #222;padding-top:8px;text-align:center">Firma de la empresa</div>
+    </div>
+  </div>`;
+  openPrint(html,'Boleta de Pago');
+}
+function generarReporteGeneral(){
+  const rows=state.history.slice(); if(!rows.length){alert('No hay historial para generar reporte.'); return;}
+  const total=rows.reduce((a,b)=>a+num(b.neto),0);
+  const html=`<div style="font-family:Arial,sans-serif;color:#111;padding:24px">
+    <h1 style="margin:0 0 8px">Reporte General de Pagos</h1>
+    <div><b>Empresa:</b> ${safe(state.config.empresa)}<br><b>RUC:</b> ${safe(state.config.ruc)}<br><b>Dirección:</b> ${safe(state.config.direccion)}</div>
+    <div style="margin:16px 0"><b>Total boletas:</b> ${rows.length} &nbsp; | &nbsp; <b>Total neto:</b> ${money(total)} &nbsp; | &nbsp; <b>Total beneficios:</b> ${money(rows.reduce((s,r)=>s+num(r.cts)+num(r.gratificacion)+num(r.vacaciones),0))}</div>
+    <table style="width:100%;border-collapse:collapse;font-size:12px">
+      <thead><tr>
+        <th style="border:1px solid #bbb;padding:6px">Fecha</th>
+        <th style="border:1px solid #bbb;padding:6px">Boleta</th>
+        <th style="border:1px solid #bbb;padding:6px">Periodo</th>
+        <th style="border:1px solid #bbb;padding:6px">Trabajador</th>
+        <th style="border:1px solid #bbb;padding:6px">Estado</th>
+        <th style="border:1px solid #bbb;padding:6px">Beneficios</th>
+        <th style="border:1px solid #bbb;padding:6px">Neto</th>
+      </tr></thead>
+      <tbody>
+        ${rows.map(r=>`<tr>
+          <td style="border:1px solid #bbb;padding:6px">${safe(r.fecha)}</td>
+          <td style="border:1px solid #bbb;padding:6px">${safe(r.boleta||'')}</td>
+          <td style="border:1px solid #bbb;padding:6px">${safe(r.periodo)}</td>
+          <td style="border:1px solid #bbb;padding:6px">${safe(r.nombre)}</td>
+          <td style="border:1px solid #bbb;padding:6px">${safe(r.estadoPago||'pagado')}</td>
+          <td style="border:1px solid #bbb;padding:6px;text-align:right">${money(num(r.cts)+num(r.gratificacion)+num(r.vacaciones))}</td>
+          <td style="border:1px solid #bbb;padding:6px;text-align:right"><b>${money(r.neto)}</b></td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>`;
+  openPrint(html,'Reporte General');
+}
+let signaturePadCtx=null, signatureDrawing=false;
+function openSignatureModal(){
+  byId('signatureModal').classList.add('open');
+  initSignaturePad();
+}
+function closeSignatureModal(){ byId('signatureModal').classList.remove('open'); }
+function initSignaturePad(){
+  const canvas=byId('signaturePad'); if(!canvas || canvas.dataset.ready) return;
+  const ctx=canvas.getContext('2d'); signaturePadCtx=ctx; ctx.lineWidth=2; ctx.lineCap='round'; ctx.strokeStyle='#111';
+  const pos=e=>{ const r=canvas.getBoundingClientRect(); const t=e.touches?e.touches[0]:e; return {x:(t.clientX-r.left)*(canvas.width/r.width), y:(t.clientY-r.top)*(canvas.height/r.height)}; };
+  const start=e=>{ signatureDrawing=true; const p=pos(e); ctx.beginPath(); ctx.moveTo(p.x,p.y); e.preventDefault(); };
+  const move=e=>{ if(!signatureDrawing) return; const p=pos(e); ctx.lineTo(p.x,p.y); ctx.stroke(); e.preventDefault(); };
+  const end=()=>{ signatureDrawing=false; };
+  ['mousedown','touchstart'].forEach(ev=>canvas.addEventListener(ev,start,{passive:false}));
+  ['mousemove','touchmove'].forEach(ev=>canvas.addEventListener(ev,move,{passive:false}));
+  ['mouseup','mouseleave','touchend'].forEach(ev=>canvas.addEventListener(ev,end));
+  canvas.dataset.ready='1';
+}
+function clearSignaturePad(){ const canvas=byId('signaturePad'); const ctx=canvas.getContext('2d'); ctx.clearRect(0,0,canvas.width,canvas.height); state.payrollSignature=''; }
+function saveSignaturePad(){ const canvas=byId('signaturePad'); state.payrollSignature=canvas.toDataURL('image/png'); closeSignatureModal(); alert('Firma guardada para la próxima boleta.'); }
+function openPrint(html,title){
+  const w=window.open('','_blank');
+  if(!w){alert('El navegador bloqueó la ventana de impresión.'); return;}
+  w.document.write(`<!doctype html><html><head><meta charset="utf-8"><title>${title}</title><style>body{margin:0}</style></head><body>${html}<script>window.onload=function(){window.print()}<\/script></body></html>`);
+  w.document.close();
+}
+
+function renderAll(){
+  renderWorkers();
+  renderAdvances();
+  renderHistory();
+  renderDashboard();
+  renderStats();
+  renderSystemUsers();
+  renderAudit();
+  fillWorkerSelects();
+  saveState();
+}
+
+loadState();
+applySession();
+clearAdvanceForm();
+byId('fechaInicio').value=today();
+byId('fechaFin').value=today();
+if(!state.currentUser) showTab('dashboard');
+</script>
+</body>
+</html>
